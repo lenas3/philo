@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv)
 {
-    if(argc == 6)
+    if(argc == 6 || argc == 5)
     {
         t_main ptr;
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
         ptr.die_time = ft_atoi(argv[2]);
         ptr.eat_time = ft_atoi(argv[3]);
         ptr.sleep_time = ft_atoi(argv[4]);
-        ptr.eat_all = ft_atoi(argv[5]);
+        ptr.all_eat = ft_atoi(argv[5]);
         init_philos(ptr);
     }
     else
