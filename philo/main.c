@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2025/12/20 18:51:59 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/17 18:05:16 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         ptr.eat_time = ft_atoi(argv[3]);
         ptr.sleep_time = ft_atoi(argv[4]);
         ptr.all_eat = ft_atoi(argv[5]);
-        init_philos(ptr);
+        init_philos(&ptr);
     }
     else
         return(write(2, "Wrong number of arguments!\n", 28));

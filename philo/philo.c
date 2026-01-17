@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2025/12/20 19:27:32 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/17 18:13:04 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,20 @@ void init_philos(t_main *ptr)
         // her philo'nun (thread'in) bazı özellikleri olucak, kaçıncı philo oldukları ya da thread id'leri gibi
         // burada o bilgilerin olduğu struct'ın doldurulması gerekç
         ptr->philos[i].philo_id = i + 1; //1. philodan numaralandırma başlıyo.  
-        ptr->philos[i].left_forks = ; 
-        ptr->philos[i].right_forks = ; 
-        ptr->philos[i].tid = ; 
-        pthread_create(&ptr->philos[i].thread,NULL, routine, ptr->philos[i]);
+        ptr->philos[i].left_forks = &ptr->forks[i]; 
+        ptr->philos[i].right_forks = &ptr->forks[(i + 1) % ptr->philo_num]; 
+        ptr->philos[i].tid = 0; 
+        pthread_create(&ptr->philos[i].thread,NULL, routine, (void *)&ptr->philos[i]);
         i++;
     }
 }
+#include <stdio.h>
 
 void *routine(void *ptr)
 {
-    
+    (void)ptr;
+    printf("Yemek Yiyorum\n");
+    printf("Uyuyorum\n");
+    printf("Düşünüyorum\n");
+    return (NULL);
 }

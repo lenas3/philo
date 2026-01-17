@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2025/12/20 19:04:23 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/17 17:23:48 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILO_H
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include <sys/time.h>
 
@@ -44,5 +45,7 @@ typedef struct s_main
 
 void init_philos(t_main *ptr);
 int	ft_atoi(const char *str);
+int is_valid(char *str);
+void *routine(void *ptr);
 
 #endif
