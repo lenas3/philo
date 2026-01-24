@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/01/17 18:06:19 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/24 18:43:20 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ int	ft_atoi(const char *str)
 	{
 		sum = (sum * 10) + (str[i] - '0');
 		if (sign == 1 && sum > 2147483647)
-            return 0;
+            return (write(1, "Overflow!\n", 10));
         if (sign == -1 && sum > -2147483648)
-            return 0;
+            return (write(1, "Overflow!\n", 10));
         i++;
 	}
 	return (sign * sum);

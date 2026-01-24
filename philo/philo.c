@@ -6,84 +6,42 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/01/17 18:13:04 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/24 20:48:27 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/*
-------------------------Threads----------------------------
--threads don't work at the same speed.
-
-pthread_create(&t1, NULL, print_hello, argument); 
--print_hello is the function we assign to the thread. it needs to take void * argument and needs to return void *.
--"argument" is the argument we send to the print_hello function.
-
-------------------------Mutexes----------------------------
-there is a struct that comes with #include <pthread.h>;
-typedef struct data_s
+long convert_time(void)
 {
-    int num;
-    pthread_mutext_t mutex;
-}data_t
-!!after using the mutex, DO NOT forget to destroy mutexes. 
-------------------------Time-------------------------------
--gets the current time.
-int gettimeofday(struct timeval *tv, struct timezone *tz);
+    struct timeval time;
+    long total_ms;
 
-1 second = 1 000 000 microseconds.
-1 second = 1 000 miliseconds.
-
-struct timeval{
-    time_t          tv_sec; //seconds from january 1, 1970
-    suseconds_t     tv_usec; //microseconds
-};
-
-*/
-
-
-//fork fonksiyonu yanlış.
-void create_forks(t_main *ptr)
-{
-    int i;
-
-    ptr->forks = malloc((ptr->philo_num) * sizeof(pthread_mutex_t));
-    i = 0;
-    while(i < ptr->philo_num)
-    {
-        pthread_mutex_init(&ptr->forks[i], NULL);
-        i++;
-    }
+    total_ms = 0;
+    gettimeofday(&time, NULL); //NULL yazılmazsa tz yani timezone yazılması gerekir.
+    total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000); 
+    return (total_ms);
 }
 
-void init_philos(t_main *ptr)
-{
-    int i ;
 
-    ptr->philos = malloc((ptr->philo_num) * sizeof(pthread_t));
-    if(!ptr->philos)
-        return ;
-    i = 0;
-    while(i < ptr->philo_num)
+/* routine void * alır çünkü thread'ler tarafından çağrıldığında 
+hangi türde bir değişken ile çağrılacağını bilmez. */
+void *routine(void *arg)
+{
+    t_philo *ptr;
+    t_main  *main;
+
+    ptr = (t_philo *)arg;
+    main = ptr->data;
+    if(main->philo_num == 1)
     {
-        // her philo'nun (thread'in) bazı özellikleri olucak, kaçıncı philo oldukları ya da thread id'leri gibi
-        // burada o bilgilerin olduğu struct'ın doldurulması gerekç
-        ptr->philos[i].philo_id = i + 1; //1. philodan numaralandırma başlıyo.  
-        ptr->philos[i].left_forks = &ptr->forks[i]; 
-        ptr->philos[i].right_forks = &ptr->forks[(i + 1) % ptr->philo_num]; 
-        ptr->philos[i].tid = 0; 
-        pthread_create(&ptr->philos[i].thread,NULL, routine, (void *)&ptr->philos[i]);
-        i++;
+        pthread_mutex_lock(ptr->left_fork);
+        printf("%ld 1 has taken a fork.\n", (convert_time() - main->start));
+        while((convert_time() - main->start) < main->die_time)
+            usleep(100);
+        printf("%ld 1 died.\n", (convert_time() - main->start));
+        pthread_mutex_unlock(ptr->left_fork);
+        return ((void *)0);
     }
-}
-#include <stdio.h>
-
-void *routine(void *ptr)
-{
-    (void)ptr;
-    printf("Yemek Yiyorum\n");
-    printf("Uyuyorum\n");
-    printf("Düşünüyorum\n");
-    return (NULL);
+    return NULL;
 }

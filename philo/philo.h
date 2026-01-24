@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/01/17 17:23:48 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/24 20:47:50 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILO_H
 
 #include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/time.h>
@@ -22,9 +23,8 @@ typedef struct s_philo
 {
     int             philo_id; //masadaki kacıncı philo oldugunu tutucaz
     int             eat_num; //kaç kez yediklerini sayıyoruz.
-    pthread_mutex_t *left_forks;
-    pthread_mutex_t *right_forks;
-    pthread_t       tid;
+    pthread_mutex_t *left_fork;
+    pthread_mutex_t *right_fork;
     pthread_t       thread;
     struct s_main   *data;
 }t_philo;
@@ -38,14 +38,22 @@ typedef struct s_main
     int             all_eat;
     t_philo         *philos;
     pthread_mutex_t *forks;
+    pthread_mutex_t write_mutex;
+    pthread_mutex_t dead_mutex;
+    int             died;
+    long            start;
 }t_main;
 
 // main struct'ının philolara erişimi: tüm filozofları yönetmek için
 // philo struct'ının main'e erişimi: paylaşılan verileri kullanmak için
 
+void init_args(char **argv);
 void init_philos(t_main *ptr);
+void forks(t_main *ptr);
+void threads(t_main *ptr);
 int	ft_atoi(const char *str);
 int is_valid(char *str);
-void *routine(void *ptr);
+void *routine(void *arg);
+long convert_time(void);
 
 #endif
