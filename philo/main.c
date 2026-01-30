@@ -6,27 +6,26 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/01/24 20:47:33 by asay             ###   ########.fr       */
+/*   Updated: 2026/01/30 20:04:08 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void init_args(char **argv)
+void init_args(t_main *main, char **argv)
 {
-    t_main main;
     if(is_valid(argv[1]) || is_valid(argv[2]) || is_valid(argv[3]) 
         || is_valid(argv[4]) || is_valid(argv[5]))
     {
         write(2, "Invalid Argument!\n", 19);
         return ;
     }
-    main.philo_num = ft_atoi(argv[1]);
-    main.die_time = ft_atoi(argv[2]);
-    main.eat_time = ft_atoi(argv[3]);
-    main.sleep_time = ft_atoi(argv[4]);
-    main.all_eat = ft_atoi(argv[5]);
-    init_philos(&main);
+    main->philo_num = ft_atoi(argv[1]);
+    main->die_time = ft_atoi(argv[2]);
+    main->eat_time = ft_atoi(argv[3]);
+    main->sleep_time = ft_atoi(argv[4]);
+    main->all_eat = ft_atoi(argv[5]);
+
 }
 
 void threads(t_main *main)
@@ -39,19 +38,10 @@ void threads(t_main *main)
         pthread_create(&main->philos[i].thread, NULL, routine, (void *)&main->philos[i]);
         i++;
     }
-}
-
-void forks(t_main *main)
-{
-    int i;
-
-    main->forks = malloc((main->philo_num) * sizeof(pthread_mutex_t));
-    if(!main->forks)
-        return ;
     i = 0;
     while(i < main->philo_num)
     {
-        pthread_mutex_init(&main->forks[i], NULL);
+        pthread_join(main->philos[i].thread, NULL);
         i++;
     }
 }
@@ -59,7 +49,6 @@ void forks(t_main *main)
 void init_philos(t_main *main)
 {
     int i ;
-
     /*
     philos için şu tarz bi heap düşünülebilir:
     philos (heap):
@@ -85,19 +74,35 @@ void init_philos(t_main *main)
     }
 }    
 
+void  forks(t_main *main)
+{
+    int i;
+
+    main->forks = malloc((main->philo_num) * sizeof(pthread_mutex_t));
+    if(!main->forks)
+        return ;
+    i = 0;
+    while(i < main->philo_num)
+    {
+        pthread_mutex_init(&main->forks[i], NULL);
+        i++;
+    }
+}
+ 
 int main(int argc, char **argv)
 {
     if(argc == 6)
     {
-        t_main *main;
+        t_main main;
 
-        main = NULL;
-        init_args(argv);
-        forks(main);
-        main->start = convert_time();
-        threads(main);
-        init_philos(main);
-        
+        if(ft_atoi(argv[1]) == -1 || ft_atoi(argv[2]) == -1 
+            || ft_atoi(argv[3])  == -1|| ft_atoi(argv[4])  == -1 || ft_atoi(argv[5])  == -1)
+        	return 0;
+        init_args(&main, argv);
+        init_philos(&main);
+        main.start = convert_time();
+        printf("%ld\n", main.start);
+        threads(&main);
         return 0;    
     }
     else 

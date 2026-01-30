@@ -2,7 +2,8 @@ NAME = philo
 SRC = utils.c main.c philo.c
 
 OBJS = $(SRC:.c=.o)
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address 
+#  valgrind --leak-check=full --show-leak-kinds=all
 CC = cc
 
 all: $(NAME)
