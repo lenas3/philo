@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/01/30 20:00:42 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/01 20:35:07 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
     pthread_mutex_t *right_fork;
     pthread_t       thread;
     struct s_main   *data;
+    long            last_meal;
 }t_philo;
 
 typedef struct s_main
@@ -42,6 +43,9 @@ typedef struct s_main
     pthread_mutex_t dead_mutex;
     int             died;
     long            start;
+    int             rudead;
+    pthread_mutex_t *som1died;
+    
 }t_main;
 
 // main struct'ının philolara erişimi: tüm filozofları yönetmek için
@@ -55,6 +59,5 @@ int	ft_atoi(const char *str);
 int is_valid(char *str);
 void *routine(void *arg);
 long convert_time(void);
-void   cleandaforks(t_main *main);
 
 #endif

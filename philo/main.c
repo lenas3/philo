@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/01/30 20:04:08 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/01 20:35:29 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void threads(t_main *main)
     int i;
 
     i = 0;
+    // pthread_create(&main->monitor, NULL, monitor_routine, main);
+    // pthread_join(main->monitor, NULL);
     while(i < main->philo_num)
     {
         pthread_create(&main->philos[i].thread, NULL, routine, (void *)&main->philos[i]);
@@ -101,6 +103,7 @@ int main(int argc, char **argv)
         init_args(&main, argv);
         init_philos(&main);
         main.start = convert_time();
+        main.rudead = 0;
         printf("%ld\n", main.start);
         threads(&main);
         return 0;    
