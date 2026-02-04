@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/02/01 20:35:07 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/04 19:36:39 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,10 @@ int	ft_atoi(const char *str);
 int is_valid(char *str);
 void *routine(void *arg);
 long convert_time(void);
+void    destroy_forks(t_main *main);
+int death_ctrl(t_main *main, t_philo *ptr);
+void    destroy_philos(t_main *main);
+void    free_all(t_main *main);
+void eating(t_main *main, t_philo *ptr, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/01/30 20:03:53 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/04 18:29:08 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,34 @@ int is_valid(char *str)
         i++;
     }
     return 0;
+}
+void    destroy_forks(t_main *main)
+{
+    int i;
+
+    i = 0;
+    while (i < main->philo_num && main->forks)
+    {
+        pthread_mutex_destroy(&main->forks[i]);
+        i++;
+    }
+	pthread_mutex_destroy(&main->write_mutex);
+	pthread_mutex_destroy(&main->dead_mutex);
+    if(main->forks)
+		free(main->forks);
+}
+
+void    destroy_philos(t_main *main)
+{
+	int i;
+
+	i = 0;
+	while (i < main->philo_num && main->philos)
+	{
+		pthread_mutex_destroy(main->philos[i].left_fork);
+		pthread_mutex_destroy(main->philos[i].right_fork);
+		i++;
+	}
+	if(main->philos)
+		free(main->philos);
 }

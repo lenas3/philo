@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/01 20:35:29 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/04 19:01:18 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void init_philos(t_main *main)
     if(!main->philos)
         return ;
     i = 0;
-    forks(main); 
+    forks(main);
     while(i < main->philo_num)
     {
         // her philo'nun (thread'in) bazı özellikleri olucak, kaçıncı philo oldukları ya da thread id'leri gibi
@@ -89,6 +89,10 @@ void  forks(t_main *main)
         pthread_mutex_init(&main->forks[i], NULL);
         i++;
     }
+    main->som1died = malloc(sizeof(pthread_mutex_t));
+    if(!main->som1died)
+        return ;
+    pthread_mutex_init(main->som1died, NULL);
 }
  
 int main(int argc, char **argv)
@@ -96,7 +100,6 @@ int main(int argc, char **argv)
     if(argc == 6)
     {
         t_main main;
-
         if(ft_atoi(argv[1]) == -1 || ft_atoi(argv[2]) == -1 
             || ft_atoi(argv[3])  == -1|| ft_atoi(argv[4])  == -1 || ft_atoi(argv[5])  == -1)
         	return 0;
@@ -104,8 +107,9 @@ int main(int argc, char **argv)
         init_philos(&main);
         main.start = convert_time();
         main.rudead = 0;
-        printf("%ld\n", main.start);
+        //printf("%ld\n", main.start);
         threads(&main);
+        free_all(&main);
         return 0;    
     }
     else 
