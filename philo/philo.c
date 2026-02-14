@@ -6,40 +6,44 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/07 20:35:11 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/14 16:17:49 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long convert_time(void)
-{
-    struct timeval time;
-    long total_ms;
-
-    total_ms = 0;
-    gettimeofday(&time, NULL); //NULL yazılmazsa tz yani timezone yazılması gerekir.
-    total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000); 
-    return (total_ms);
-}
-
 int death_ctrl(t_main *main, t_philo *ptr)
 {
-    pthread_mutex_lock(main->som1died);
-    printf("die: %d\n", main->die_time);
-    printf("time: %ld\n", convert_time() - ptr->last_meal);
-    printf("last: %ld\n", ptr->last_meal);
-    
+    pthread_mutex_lock(&main->dead_mutex);
     if(main->rudead == 0 && (convert_time() - ptr->last_meal) >= main->die_time)
     {
-        printf("test\n");
         main->rudead = 1;
         printf("%ld \t%d died.\n", convert_time() - main->start, ptr->philo_id);
-        pthread_mutex_unlock(main->som1died);
+        pthread_mutex_unlock(&main->dead_mutex);
         return 1;
     }
-    pthread_mutex_unlock(main->som1died);
+    pthread_mutex_unlock(&main->dead_mutex);
     return 0;
+}
+
+void *monitor_routine(void *arg)
+{
+    t_main *main;
+    int i;
+    
+    main = (t_main *)arg;
+    while(!main->rudead)
+    {
+        i = 0;
+        while(i < main->philo_num)
+        {
+            if(death_ctrl(main, &main->philos[i]))
+                return NULL;
+            i++;
+        }
+        usleep(500);
+    }
+    return NULL;
 }
 
 /* routine void * alır çünkü thread'ler tarafından çağrıldığında 
@@ -62,19 +66,15 @@ void *routine(void *arg)
         pthread_mutex_unlock(ptr->left_fork);
         printf("%d\n", main->rudead);
         return ((void *)0);
-        
     }
-    if(main->philo_num % 2 == 0)
-        usleep(100);
-    while(i < main->philo_num)
+    if (ptr->philo_id % 2 == 0)
+        usleep(1000);
+    while(!main->rudead)
     {   
-        if(i % 2 == 0)
-        {
-            eating(main, ptr, i);
-            printf("%ld\t%d is sleeping.\n", (convert_time() - main->start), ptr->philo_id);
-            usleep(main->sleep_time * 1000);
-            printf("%ld\t%d is thinking.\n", (convert_time() - main->start), ptr->philo_id);            
-        }
+        eating(main, ptr, i);
+        printf("%ld\t%d is sleeping.\n", (convert_time() - main->start), ptr->philo_id);
+        usleep(main->sleep_time * 1000);
+        printf("%ld\t%d is thinking.\n", (convert_time() - main->start), ptr->philo_id);            
         i++;
     }
     return NULL;
@@ -82,6 +82,7 @@ void *routine(void *arg)
 
 void eating(t_main *main, t_philo *ptr, int i)
 {
+    ptr->last_meal = convert_time();
     pthread_mutex_lock(ptr->left_fork);
     printf("%ld\t%d has taken a fork.\n", (convert_time() - main->start), i);
     pthread_mutex_lock(ptr->right_fork);
@@ -97,25 +98,5 @@ void eating(t_main *main, t_philo *ptr, int i)
     //kitliyoruz ki death_ctrl thread'inde som1died ile herhangi bi işlem yapılamasın.
     pthread_mutex_unlock(ptr->left_fork);
     pthread_mutex_unlock(ptr->right_fork); 
-}
-
-void *monitor_routine(void *arg)
-{
-    t_main *main;
-    int i;
-    
-    main = (t_main *)arg;
-    while(!main->rudead)
-    {
-        i = 0;
-        while(i < main->philo_num)
-        {
-            if(death_ctrl(main, &main->philos[i]))
-                return NULL;
-            i++;
-        }
-        usleep(500);
-    }
-    return NULL;
 }
 

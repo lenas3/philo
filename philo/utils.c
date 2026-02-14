@@ -6,11 +6,22 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/02/07 19:35:44 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/14 15:31:38 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "philo.h"
+
+long convert_time(void)
+{
+    struct timeval time;
+    long total_ms;
+
+    total_ms = 0;
+    gettimeofday(&time, NULL); //NULL yazılmazsa tz yani timezone yazılması gerekir.
+    total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000); 
+    return (total_ms);
+}
 
 int	ft_atoi(const char *str)
 {
@@ -29,12 +40,12 @@ int	ft_atoi(const char *str)
 			sign = sign * -1;
 		i++;
 	}
+	if(is_valid((char *)str))
+		return -1;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		sum = (sum * 10) + (str[i] - '0');
-		if (sign == 1 && sum > 2147483647)
-            return(-1);
-        if (sign == -1 && sum > 2147483648)
+		if ((sign == 1 && sum > 2147483647) || (sign == -1 && sum > 2147483648))
             return(-1);
         i++;
 	}

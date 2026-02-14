@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/02/07 19:37:06 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/14 16:14:30 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ typedef struct s_main
 // main struct'ının philolara erişimi: tüm filozofları yönetmek için
 // philo struct'ının main'e erişimi: paylaşılan verileri kullanmak için
 
-int     init_args(t_main *main, char **argv);
+void    init_args(t_main *main, char **argv);
 int     init_philos(t_main *main);
-int     forks(t_main *main);
+int     init_forks(t_main *main);
 void    threads(t_main *ptr);
 int	    ft_atoi(const char *str);
 int     is_valid(char *str);
