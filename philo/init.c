@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
+/*   Updated: 2026/02/15 20:34:44 by asay             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void init_args(t_main *main, char **argv)
@@ -7,10 +19,9 @@ void init_args(t_main *main, char **argv)
     main->eat_time = ft_atoi(argv[3]);
     main->sleep_time = ft_atoi(argv[4]);
     main->all_eat = -1;
-
 }
 
-void threads(t_main *main)
+void threads(t_main *main, int argc)
 {
     int i;
 
@@ -20,14 +31,22 @@ void threads(t_main *main)
         pthread_create(&main->philos[i].thread, NULL, routine, (void *)&main->philos[i]);
         i++;
     }
-    pthread_create(&main->monitor, NULL, monitor_routine, main);
-    pthread_join(main->monitor, NULL);
+    if(main->philo_num == 1)
+    {
+        pthread_join(main->philos[0].thread, NULL);
+        return ;
+    }
+    if(argc == 5)
+        pthread_create(&main->monitor, NULL, monitor_routine_5, main);
+    else if(argc == 6)
+        pthread_create(&main->monitor, NULL, monitor_routine_6, main);
     i = 0;
     while(i < main->philo_num)
     {
         pthread_join(main->philos[i].thread, NULL);
         i++;
     }
+    pthread_join(main->monitor, NULL);
 }
 
 int init_philos(t_main *main)

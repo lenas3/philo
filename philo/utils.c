@@ -6,11 +6,19 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/02/14 15:31:38 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/15 20:01:08 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "philo.h"
+
+long elapsed_time(t_main *main)
+{
+	long elapsed;
+
+	elapsed = convert_time() - main->start;
+	return (elapsed);
+}
 
 long convert_time(void)
 {
