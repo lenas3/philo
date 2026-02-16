@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/02/15 20:01:08 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/16 21:16:19 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ long convert_time(void)
 
     total_ms = 0;
     gettimeofday(&time, NULL); //NULL yazılmazsa tz yani timezone yazılması gerekir.
-    total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000); 
+    total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
     return (total_ms);
 }
 

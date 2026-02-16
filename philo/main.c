@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/15 19:50:39 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/16 21:16:03 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ int main(int argc, char **argv)
         main.all_eat = ft_atoi(argv[5]);
     init_forks(&main);
     init_philos(&main);
-    main.start = convert_time();
     main.rudead = 0;
-    threads(&main, argc);
+    main.ac = argc;
+    main.start = convert_time();
+    threads(&main);
     return(0);
 }

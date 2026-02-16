@@ -1,9 +1,9 @@
 NAME = philo
-SRC = utils.c main.c philo.c init.c
+SRC = utils.c main.c philo.c init.c monitoring.c
 
 OBJS = $(SRC:.c=.o)
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address 
-CC = cc
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
+CC = cc 
 
 all: $(NAME)
 

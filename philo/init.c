@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/02/15 20:34:44 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/16 21:16:10 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void init_args(t_main *main, char **argv)
     main->all_eat = -1;
 }
 
-void threads(t_main *main, int argc)
+void threads(t_main *main)
 {
     int i;
 
@@ -35,11 +35,8 @@ void threads(t_main *main, int argc)
     {
         pthread_join(main->philos[0].thread, NULL);
         return ;
-    }
-    if(argc == 5)
-        pthread_create(&main->monitor, NULL, monitor_routine_5, main);
-    else if(argc == 6)
-        pthread_create(&main->monitor, NULL, monitor_routine_6, main);
+    }    
+    pthread_create(&main->monitor, NULL, monitor_routine, main);
     i = 0;
     while(i < main->philo_num)
     {
@@ -47,6 +44,7 @@ void threads(t_main *main, int argc)
         i++;
     }
     pthread_join(main->monitor, NULL);
+    printf("threads\n");
 }
 
 int init_philos(t_main *main)
@@ -88,5 +86,6 @@ int  init_forks(t_main *main)
     }
     pthread_mutex_init(&main->dead_mutex, NULL);
     pthread_mutex_init(&main->write_mutex, NULL);
+    pthread_mutex_init(&main->meal_mutex, NULL);
     return 0;
 }

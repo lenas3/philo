@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/15 21:11:49 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/16 21:19:16 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ void *routine(void *arg)
             return NULL ;
         }
         eating(main, ptr);
+        pthread_mutex_lock(&main->write_mutex);
         printf("%ld\t%d is sleeping.\n", elapsed_time(main), ptr->philo_id);
+        pthread_mutex_unlock(&main->write_mutex);
         usleep(main->sleep_time * 1000);
         thinking(main, ptr);
         i++;
@@ -66,17 +68,43 @@ void *routine(void *arg)
 }
 
 void eating(t_main *main, t_philo *ptr)
-{
-    pthread_mutex_lock(ptr->left_fork);
-    printf("%ld\t%d has taken a fork.\n", elapsed_time(main), ptr->philo_id);
-    pthread_mutex_lock(ptr->right_fork);
-    printf("%ld\t%d has taken a fork.\n", elapsed_time(main), ptr->philo_id);
+{   
+    if(ptr->philo_id % 2 == 0)
+    {
+        pthread_mutex_lock(ptr->right_fork);
+        pthread_mutex_lock(&main->write_mutex);
+        printf("%ld\t%d has taken a fork.\n", elapsed_time(main), ptr->philo_id);
+        pthread_mutex_unlock(&main->write_mutex);
+        pthread_mutex_unlock(ptr->right_fork);
+        pthread_mutex_lock(ptr->left_fork);
+        pthread_mutex_lock(&main->write_mutex);
+        printf("%ld\t%d has taken a fork.\n", elapsed_time(main), ptr->philo_id);
+        pthread_mutex_unlock(&main->write_mutex);
+        pthread_mutex_unlock(ptr->left_fork);
+    }
+    else
+    {
+        pthread_mutex_lock(ptr->left_fork);
+        pthread_mutex_lock(&main->write_mutex);
+        printf("%ld\t%d has taken a fork.\n", elapsed_time(main), ptr->philo_id);
+        pthread_mutex_unlock(&main->write_mutex);
+        pthread_mutex_unlock(ptr->left_fork);
+        pthread_mutex_lock(ptr->right_fork);
+        pthread_mutex_lock(&main->write_mutex);
+        printf("%ld\t%d has taken a fork.\n", elapsed_time(main), ptr->philo_id);
+        pthread_mutex_unlock(&main->write_mutex);
+        pthread_mutex_unlock(ptr->left_fork);
+    }
+    pthread_mutex_lock(&main->write_mutex);
     printf("%ld\t%d is eating.\n", elapsed_time(main), ptr->philo_id);
-    usleep(main->eat_time * 1000);
-    main->eat_time++;
-    //pthread_mutex_lock(&main->dead_mutex);    ??
+    pthread_mutex_unlock(&main->write_mutex);
+    pthread_mutex_lock(&main->meal_mutex);  
     ptr->last_meal = convert_time();
-    //pthread_mutex_unlock(&main->dead_mutex);  ??
+    pthread_mutex_unlock(&main->meal_mutex);
+    usleep(main->eat_time * 1000);
+    pthread_mutex_lock(&main->meal_mutex);  
+    ptr->eat_num++;
+    pthread_mutex_unlock(&main->meal_mutex); 
     pthread_mutex_unlock(ptr->left_fork);
     pthread_mutex_unlock(ptr->right_fork); 
 }
