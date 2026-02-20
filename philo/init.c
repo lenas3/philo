@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/02/16 21:16:10 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/20 17:05:15 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void threads(t_main *main)
         i++;
     }
     pthread_join(main->monitor, NULL);
-    printf("threads\n");
 }
 
 int init_philos(t_main *main)

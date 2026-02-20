@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/16 21:16:03 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/20 16:27:48 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,19 @@ int main(int argc, char **argv)
         write(2, "Wrong number of arguments!\n", 28);
         return 0;
     }
-    if(ft_atoi(argv[1]) == -1 || ft_atoi(argv[2]) == -1 
-        || ft_atoi(argv[3])  == -1|| ft_atoi(argv[4])  == -1 || ft_atoi(argv[5])  == -1)
+    if(!ft_atoi(argv[1]) || !ft_atoi(argv[2]) || !ft_atoi(argv[3]) || !ft_atoi(argv[4]))
     {
         write(2, "Error\nInvalid argument!\n", 24);
         return 0;
     }
     init_args(&main, argv);
     if(argc == 6)
-        main.all_eat = ft_atoi(argv[5]);
+    {
+        if(ft_atoi(argv[5]))
+            main.all_eat = ft_atoi(argv[5]);
+        else 
+            return 0;
+    }
     init_forks(&main);
     init_philos(&main);
     main.rudead = 0;

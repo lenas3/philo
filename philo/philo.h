@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/02/16 15:42:00 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/20 13:17:45 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,6 @@ void    *monitor_routine(void *arg);
 long    elapsed_time(t_main *main);
 void    one_philo(t_main *main, t_philo *ptr);
 void    thinking(t_main *main, t_philo *ptr);
+int     eat_count_ctrl(t_main *main);
 
 #endif

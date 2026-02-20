@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 21:11:36 by asay              #+#    #+#             */
-/*   Updated: 2026/02/16 15:44:07 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/20 13:29:20 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,24 @@
 int death_ctrl(t_main *main, t_philo *ptr)
 {
     long past_time;
-    long last_meal_count;
-    int all_eat_count;
 
     pthread_mutex_lock(&main->meal_mutex);
-    last_meal_count = ptr->last_meal;
-    all_eat_count = main->all_eat;
+    past_time = convert_time() - ptr->last_meal;
     pthread_mutex_unlock(&main->meal_mutex);
-    past_time = convert_time() - last_meal_count;
-    if(main->ac == 6)
-    {
-        if(past_time >= main->die_time || all_eat_count >= main->eat_time)
-            return 1;   
-    }
-    else if(main->ac == 5)
-    {
-        if(past_time >= main->die_time)
+    if(past_time >= main->die_time) 
             return 1;
-    }
+    return 0;
+}
+
+int eat_count_ctrl(t_main *main)
+{
+    pthread_mutex_lock(&main->meal_mutex);
+    if(main->all_eat == main->philo_num)
+    {
+        pthread_mutex_unlock(&main->meal_mutex);
+        return 1;
+    }   
+    pthread_mutex_unlock(&main->meal_mutex);
     return 0;
 }
 
@@ -40,25 +40,28 @@ void *monitor_routine(void *arg)
 {
     t_main *main;
     int i;
-    int is_dead;
     
     main = (t_main *)arg;
     while(1)
     {
-        i = 0;
-        pthread_mutex_lock(&main->dead_mutex);
-        is_dead = main->rudead;
-        pthread_mutex_unlock(&main->dead_mutex);
-        if(is_dead)
-            return NULL;
+        i = 0;  
         while(i < main->philo_num)
         {
-            if(!is_dead && death_ctrl(main, &main->philos[i]))
+            if(death_ctrl(main, &main->philos[i])) //to be or not to be?
             {
-                is_dead = 1;
+                pthread_mutex_lock(&main->dead_mutex);
+                main->rudead = 1;
+                pthread_mutex_unlock(&main->dead_mutex);
                 pthread_mutex_lock(&main->write_mutex);
-                printf("%ld \t%d died.\n", elapsed_time(main), main->philos[i].philo_id);
+                printf("%ld\t%d died\n", convert_time() - main->start, main->philos[i].philo_id);
                 pthread_mutex_unlock(&main->write_mutex);
+                return NULL;
+            }
+            if(eat_count_ctrl(main))
+            {
+                pthread_mutex_lock(&main->dead_mutex);
+                main->rudead = 1;
+                pthread_mutex_unlock(&main->dead_mutex);                
                 return NULL;
             }
             i++;
