@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 21:11:36 by asay              #+#    #+#             */
-/*   Updated: 2026/02/20 13:29:20 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/21 17:33:21 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,27 @@ int death_ctrl(t_main *main, t_philo *ptr)
 
 int eat_count_ctrl(t_main *main)
 {
+    int i;
+
+    i = 0;
     pthread_mutex_lock(&main->meal_mutex);
-    if(main->all_eat == main->philo_num)
+    if(main->must_eat <= 0)
     {
         pthread_mutex_unlock(&main->meal_mutex);
-        return 1;
-    }   
+        return 0;
+    }
     pthread_mutex_unlock(&main->meal_mutex);
-    return 0;
+    while (i < main->philo_num)
+    {
+        if(main->philos[i].eat_num > main->must_eat)
+        {
+            pthread_mutex_unlock(&main->meal_mutex);
+            return 0;
+        }
+        i++;
+    } 
+    pthread_mutex_unlock(&main->meal_mutex);
+    return 1;
 }
 
 void *monitor_routine(void *arg)
@@ -47,7 +60,7 @@ void *monitor_routine(void *arg)
         i = 0;  
         while(i < main->philo_num)
         {
-            if(death_ctrl(main, &main->philos[i])) //to be or not to be?
+            if(death_ctrl(main, &main->philos[i]))
             {
                 pthread_mutex_lock(&main->dead_mutex);
                 main->rudead = 1;
@@ -66,7 +79,7 @@ void *monitor_routine(void *arg)
             }
             i++;
         }
-        usleep(1000);
+        usleep(500);
     }
     return NULL;
 }

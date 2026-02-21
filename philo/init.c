@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/02/20 17:05:15 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/21 16:03:40 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void init_args(t_main *main, char **argv)
     main->die_time = ft_atoi(argv[2]);
     main->eat_time = ft_atoi(argv[3]);
     main->sleep_time = ft_atoi(argv[4]);
-    main->all_eat = -1;
+    main->must_eat = -1;
 }
 
 void threads(t_main *main)

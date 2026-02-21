@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/20 16:27:48 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/21 16:33:27 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     if(argc == 6)
     {
         if(ft_atoi(argv[5]))
-            main.all_eat = ft_atoi(argv[5]);
+            main.must_eat = ft_atoi(argv[5]);
         else 
             return 0;
     }

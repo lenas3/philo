@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/20 17:14:36 by asay             ###   ########.fr       */
+/*   Updated: 2026/02/21 17:08:48 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void one_philo(t_main *main, t_philo *ptr)
     pthread_mutex_unlock(&main->dead_mutex);
     pthread_mutex_lock(&main->write_mutex);
     printf("%ld\t1 died.\n", convert_time() - main->start);
+    pthread_mutex_unlock(ptr->left_fork);
     pthread_mutex_unlock(&main->write_mutex);
 }
 
@@ -104,12 +105,10 @@ void eating(t_main *main, t_philo *ptr)
     pthread_mutex_lock(&main->write_mutex);
     printf("%ld\t%d is eating.\n", ptr->last_meal - main->start, ptr->philo_id);
     pthread_mutex_unlock(&main->write_mutex);
-    
-
-    while(convert_time() - main->start < main->eat_time)
+    while(convert_time() - main->start < main->eat_time && func())
     {
         pthread_mutex_lock(&main->dead_mutex);
-        if(main->rudead == 1)
+        if(main->rudead == 1) //
         {
             pthread_mutex_unlock(&main->dead_mutex);
             pthread_mutex_unlock(ptr->left_fork);
@@ -119,7 +118,7 @@ void eating(t_main *main, t_philo *ptr)
         pthread_mutex_unlock(&main->dead_mutex);
         usleep(200);
     }
-    pthread_mutex_lock(&main->meal_mutex);  
+    pthread_mutex_lock(&main->meal_mutex);
     ptr->eat_num++;
     pthread_mutex_unlock(&main->meal_mutex); 
     pthread_mutex_unlock(ptr->left_fork); 
@@ -140,3 +139,9 @@ void thinking(t_main *main, t_philo *ptr)
     printf("%ld\t%d is thinking.\n", convert_time() - main->start, ptr->philo_id);        
     pthread_mutex_unlock(&main->write_mutex);
 }
+
+
+// func rudead_checker
+// mutexl0ck
+// return 0 | 1
+// mutexunlocu
