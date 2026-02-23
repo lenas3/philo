@@ -12,13 +12,22 @@
 
 #include "philo.h"
 
-void init_args(t_main *main, char **argv)
+int init_args(t_main *main, char **argv)
 {
     main->philo_num = ft_atoi(argv[1]);
     main->die_time = ft_atoi(argv[2]);
     main->eat_time = ft_atoi(argv[3]);
     main->sleep_time = ft_atoi(argv[4]);
     main->must_eat = -1;
+    if(main->philo_num <= 0 || main->die_time <= 0 || main->eat_time <= 0 || main->sleep_time <= 0)
+        return 1;
+    if(argv[5])
+    {
+        main->must_eat = ft_atoi(argv[5]);
+        if(main->must_eat <= 0)
+            return 1;
+    }
+    return 0;
 }
 
 void threads(t_main *main)

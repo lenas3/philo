@@ -105,7 +105,7 @@ void eating(t_main *main, t_philo *ptr)
     pthread_mutex_lock(&main->write_mutex);
     printf("%ld\t%d is eating.\n", ptr->last_meal - main->start, ptr->philo_id);
     pthread_mutex_unlock(&main->write_mutex);
-    while(convert_time() - main->start < main->eat_time && func())
+    while(convert_time() - main->start < main->eat_time) //while(convert_time() - main->start < main->eat_time && func())
     {
         pthread_mutex_lock(&main->dead_mutex);
         if(main->rudead == 1) //

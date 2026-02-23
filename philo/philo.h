@@ -53,12 +53,11 @@ typedef struct s_main
 // main struct'ının philolara erişimi: tüm filozofları yönetmek için
 // philo struct'ının main'e erişimi: paylaşılan verileri kullanmak için
 
-void    init_args(t_main *main, char **argv);
+int     init_args(t_main *main, char **argv);
 int     init_philos(t_main *main);
 int     init_forks(t_main *main);
 void    threads(t_main *main);
 int	    ft_atoi(const char *str);
-int     is_valid(char *str);
 void    *routine(void *arg);
 long    convert_time(void);
 int     death_ctrl(t_main *main, t_philo *ptr);
@@ -68,5 +67,7 @@ long    elapsed_time(t_main *main);
 void    one_philo(t_main *main, t_philo *ptr);
 void    thinking(t_main *main, t_philo *ptr);
 int     eat_count_ctrl(t_main *main);
+int     is_digit(char *str);
+int     arg_check(int argc, char **argv, t_main *main);
 
 #endif
