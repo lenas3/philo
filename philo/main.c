@@ -63,11 +63,14 @@ int main(int argc, char **argv)
 
     if(arg_check(argc, argv, &main) == 0)
         return 0;
+    main.start = convert_time();
     init_forks(&main);
     init_philos(&main);
     main.rudead = 0;
     main.ac = argc;
-    main.start = convert_time();
-    threads(&main);
+    thread_create(&main);
+    monitoring(&main);
+    thread_join(&main);
+    //call destroy func.
     return(0);
 }
