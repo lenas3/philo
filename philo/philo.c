@@ -15,18 +15,13 @@
 void one_philo(t_main *main, t_philo *ptr)
 {
     pthread_mutex_lock(ptr->left_fork);
-    pthread_mutex_lock(&main->write_mutex);
-    printf("%ld\t1 has taken a fork.\n", convert_time() - main->start);
-    pthread_mutex_unlock(&main->write_mutex);
-    while (convert_time() - main->start < main->die_time)
-        usleep(100);
+    printing(main, ptr->philo_id, "has taken a fork.");
+    sleep_carefully(main, main->die_time);
+    printing(main, ptr->philo_id, "died.");
     pthread_mutex_lock(&main->dead_mutex);
     main->rudead = 1;
-    pthread_mutex_unlock(&main->dead_mutex);
-    pthread_mutex_lock(&main->write_mutex);
-    printf("%ld\t1 died.\n", convert_time() - main->start);
-    pthread_mutex_unlock(ptr->left_fork);
-    pthread_mutex_unlock(&main->write_mutex);
+    pthread_mutex_unlock(&main->dead_mutex); 
+    pthread_mutex_unlock(ptr->left_fork); 
 }
 
 /* routine void * alır çünkü thread'ler tarafından çağrıldığında 
@@ -35,9 +30,7 @@ void *routine(void *arg)
 {
     t_philo *ptr;
     t_main  *main;
-    int     i;
-
-    i = 0;
+    
     ptr = (t_philo *)arg;
     main = ptr->data;
     if(main->philo_num == 1)
@@ -47,101 +40,85 @@ void *routine(void *arg)
     }
     while(1)
     {
-        pthread_mutex_lock(&main->dead_mutex);
-        if(main->rudead == 1)
-        {
-            pthread_mutex_unlock(&main->dead_mutex);
-            break ;
-        }
-        pthread_mutex_unlock(&main->dead_mutex);
-        pthread_mutex_lock(&main->meal_mutex);
-        ptr->last_meal = convert_time();
-        pthread_mutex_unlock(&main->meal_mutex);        
-        eating(main, ptr);
-        pthread_mutex_lock(&main->write_mutex);
-        printf("%ld\t%d is sleeping.\n", convert_time() - main->start, ptr->philo_id);
-        pthread_mutex_unlock(&main->write_mutex);
-        usleep(main->sleep_time * 1000);
-        thinking(main, ptr);
-        i++;
+        if(rudead_checker(main))
+            return NULL;
+        if(eating(main, ptr) == 0)
+            return NULL;
+        if(thinking(main, ptr) == 0)
+            return NULL;
+        if(sleeping(main, ptr) == 0)
+            return NULL;
     }
     return NULL;
 }
 
-void eating(t_main *main, t_philo *ptr)
+int eating(t_main *main, t_philo *ptr)
 {
-    pthread_mutex_lock(&main->dead_mutex);
-    if(main->rudead)
-    {
-        pthread_mutex_unlock(&main->dead_mutex);
-        return ;
-    }
-    pthread_mutex_unlock(&main->dead_mutex);
+    if(rudead_checker(main))
+        return 0;
     if(ptr->philo_id % 2 == 0)
     {
         pthread_mutex_lock(ptr->right_fork);
-        pthread_mutex_lock(&main->write_mutex);
-        printf("%ld\t%d has taken a fork.\n", convert_time() - main->start, ptr->philo_id);
-        pthread_mutex_unlock(&main->write_mutex);
+        printing(main, ptr->philo_id, "has taken a fork.");
+        if (rudead_checker(main)) {
+            pthread_mutex_unlock(ptr->right_fork);
+            return 0;
+        }
         pthread_mutex_lock(ptr->left_fork);
-        pthread_mutex_lock(&main->write_mutex);
-        printf("%ld\t%d has taken a fork.\n", convert_time() - main->start, ptr->philo_id);
-        pthread_mutex_unlock(&main->write_mutex);
+        printing(main, ptr->philo_id, "has taken a fork.");
     }
     else
     {
         pthread_mutex_lock(ptr->left_fork);
-        pthread_mutex_lock(&main->write_mutex);
-        printf("%ld\t%d has taken a fork.\n", convert_time() - main->start, ptr->philo_id);
-        pthread_mutex_unlock(&main->write_mutex);
+        printing(main, ptr->philo_id, "has taken a fork.");
+        if (rudead_checker(main)) {
+            pthread_mutex_unlock(ptr->left_fork);
+            return 0;
+        }
         pthread_mutex_lock(ptr->right_fork);
-        pthread_mutex_lock(&main->write_mutex);
-        printf("%ld\t%d has taken a fork.\n", convert_time() - main->start, ptr->philo_id);
-        pthread_mutex_unlock(&main->write_mutex);
+        printing(main, ptr->philo_id, "has taken a fork.");
     }
     pthread_mutex_lock(&main->meal_mutex);
     ptr->last_meal = convert_time();
     pthread_mutex_unlock(&main->meal_mutex);
-    pthread_mutex_lock(&main->write_mutex);
-    printf("%ld\t%d is eating.\n", ptr->last_meal - main->start, ptr->philo_id);
-    pthread_mutex_unlock(&main->write_mutex);
-    while(convert_time() - main->start < main->eat_time) //while(convert_time() - main->start < main->eat_time && func())
-    {
-        pthread_mutex_lock(&main->dead_mutex);
-        if(main->rudead == 1) //
-        {
-            pthread_mutex_unlock(&main->dead_mutex);
-            pthread_mutex_unlock(ptr->left_fork);
-            pthread_mutex_unlock(ptr->right_fork);
-            return ;
-        }
-        pthread_mutex_unlock(&main->dead_mutex);
-        usleep(200);
-    }
+    printing(main, ptr->philo_id, "is eating.");
+    sleep_carefully(main, main->eat_time);
     pthread_mutex_lock(&main->meal_mutex);
     ptr->eat_num++;
-    pthread_mutex_unlock(&main->meal_mutex); 
-    pthread_mutex_unlock(ptr->left_fork); 
+    pthread_mutex_unlock(&main->meal_mutex);
     pthread_mutex_unlock(ptr->right_fork); 
-    
+    pthread_mutex_unlock(ptr->left_fork);
+    return 1;
 }
 
-void thinking(t_main *main, t_philo *ptr)
+int thinking(t_main *main, t_philo *ptr)
 {
-    pthread_mutex_lock(&main->dead_mutex);
-    if(main->rudead)
-    {
-        pthread_mutex_unlock(&main->dead_mutex);
-        return ;
-    }
-    pthread_mutex_unlock(&main->dead_mutex);
-    pthread_mutex_lock(&main->write_mutex);
-    printf("%ld\t%d is thinking.\n", convert_time() - main->start, ptr->philo_id);        
-    pthread_mutex_unlock(&main->write_mutex);
+    if(rudead_checker(main))
+        return 0;
+    printing(main, ptr->philo_id, "is thinking.");
+    if(rudead_checker(main))
+        return 0;
+    return 1;
 }
 
+int sleeping(t_main *main, t_philo *ptr)
+{
+    if(rudead_checker(main))
+        return 0;
+    printing(main, ptr->philo_id, "is sleeping.");
+    sleep_carefully(main, main->sleep_time);
+    return 1;
+}
+void sleep_carefully(t_main *main, long time_to_sleep)
+{
+    long start_time;
 
-// func rudead_checker
-// mutexl0ck
-// return 0 | 1
-// mutexunlocu
+    start_time = convert_time();
+    while (!rudead_checker(main))
+    {
+        if (convert_time() - start_time >= time_to_sleep)
+            break;
+        usleep(500);
+    }
+    return ;
+}
