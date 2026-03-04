@@ -18,6 +18,7 @@ int init_args(t_main *main, char **argv)
     main->die_time = ft_atoi(argv[2]);
     main->eat_time = ft_atoi(argv[3]);
     main->sleep_time = ft_atoi(argv[4]);
+    main->full_philos = 0;
     main->must_eat = -1;
     if(main->philo_num <= 0 || main->die_time <= 0 || main->eat_time <= 0 || main->sleep_time <= 0)
         return 1;
@@ -30,7 +31,7 @@ int init_args(t_main *main, char **argv)
     return 0;
 }
 
-void threads(t_main *main)
+void thread_create(t_main *main)
 {
     int i;
 
@@ -40,19 +41,19 @@ void threads(t_main *main)
         pthread_create(&main->philos[i].thread, NULL, routine, (void *)&main->philos[i]);
         i++;
     }
-    if(main->philo_num == 1)
-    {
-        pthread_join(main->philos[0].thread, NULL);
-        return ;
-    }    
-    pthread_create(&main->monitor, NULL, monitor_routine, main);
+}
+
+void thread_join(t_main *main)
+{
+    int i;
+
     i = 0;
     while(i < main->philo_num)
     {
         pthread_join(main->philos[i].thread, NULL);
         i++;
     }
-    pthread_join(main->monitor, NULL);
+
 }
 
 int init_philos(t_main *main)
@@ -72,10 +73,9 @@ int init_philos(t_main *main)
         main->philos[i].right_fork = &main->forks[(i + 1) % main->philo_num];
         main->philos[i].data = main; //bu sayede tüm philolar main struct'ına erişebilecek
         main->philos[i].eat_num = 0;
-        main->philos[i].last_meal = main->start;
+        main->philos[i].last_meal = main->start; 
         i++;
     }
-    main->rudead = 0;
     return 0;
 }    
 
