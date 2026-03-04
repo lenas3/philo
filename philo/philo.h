@@ -47,6 +47,7 @@ typedef struct s_main
     int             rudead; 
     pthread_t       monitor;
     int             ac;
+    int             full_philos;
       
 }t_main;
 
@@ -56,18 +57,23 @@ typedef struct s_main
 int     init_args(t_main *main, char **argv);
 int     init_philos(t_main *main);
 int     init_forks(t_main *main);
-void    threads(t_main *main);
+void    thread_create(t_main *main);
+void    thread_join(t_main *main);
 int	    ft_atoi(const char *str);
 void    *routine(void *arg);
 long    convert_time(void);
-int     death_ctrl(t_main *main, t_philo *ptr);
-void    eating(t_main *main, t_philo *ptr);
-void    *monitor_routine(void *arg);
+int     death_ctrl(t_main *main);
+int     eating(t_main *main, t_philo *ptr);
+void    monitoring(t_main *main);
 long    elapsed_time(t_main *main);
 void    one_philo(t_main *main, t_philo *ptr);
-void    thinking(t_main *main, t_philo *ptr);
+int     thinking(t_main *main, t_philo *ptr);
 int     eat_count_ctrl(t_main *main);
 int     is_digit(char *str);
 int     arg_check(int argc, char **argv, t_main *main);
+int     sleeping(t_main *main, t_philo *ptr);
+void    sleep_carefully(t_main *main, long start);
+int     rudead_checker(t_main *main);
+void    printing(t_main *main, int philo_id, char *str);
 
 #endif
