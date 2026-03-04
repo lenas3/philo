@@ -12,7 +12,7 @@
 
 # include "philo.h"
 
-long elapsed_time(t_main *main)
+long elapsed_time(t_main *main) //bu fonksiyon, bir filozofun doğumundan itibaren geçen süreyi hesaplar.
 {
 	long elapsed;
 
@@ -20,7 +20,7 @@ long elapsed_time(t_main *main)
 	return (elapsed);
 }
 
-long convert_time(void)
+long convert_time(void) //bu fonksiyon, geçerli zamanı milisaniye cinsinden döndürür.
 {
     struct timeval time;
     long total_ms;
@@ -56,4 +56,30 @@ int	ft_atoi(const char *str)
         i++;
 	}
 	return (sign * sum);
+}
+
+int rudead_checker(t_main *main)
+{
+	pthread_mutex_lock(&main->dead_mutex);
+    if(main->rudead == 1)
+    {
+		pthread_mutex_unlock(&main->dead_mutex);
+        return 1;
+    }
+    pthread_mutex_unlock(&main->dead_mutex);
+    return 0;
+}
+
+void printing(t_main *main, int philo_id, char *str)
+{
+    if (rudead_checker(main))
+        return;
+    pthread_mutex_lock(&main->write_mutex);
+    if (rudead_checker(main))
+    {
+        pthread_mutex_unlock(&main->write_mutex);
+        return;
+    }
+    printf("%ld\t%d %s\n", elapsed_time(main), philo_id, str);
+    pthread_mutex_unlock(&main->write_mutex);
 }
