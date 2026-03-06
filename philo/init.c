@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/02/21 16:03:40 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/04 20:58:48 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ void thread_create(t_main *main)
     i = 0;
     while(i < main->philo_num)
     {
+        main->philos[i].last_meal = main->start; 
         pthread_create(&main->philos[i].thread, NULL, routine, (void *)&main->philos[i]);
         i++;
     }
-}
+}   
 
 void thread_join(t_main *main)
 {
@@ -73,7 +74,7 @@ int init_philos(t_main *main)
         main->philos[i].right_fork = &main->forks[(i + 1) % main->philo_num];
         main->philos[i].data = main; //bu sayede tüm philolar main struct'ına erişebilecek
         main->philos[i].eat_num = 0;
-        main->philos[i].last_meal = main->start; 
+        //main->philos[i].last_meal = main->start; 
         i++;
     }
     return 0;
