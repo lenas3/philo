@@ -6,29 +6,29 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 12:35:33 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 16:38:34 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "philo.h"
+#include "philo.h"
 
-long elapsed_time(t_main *main) //bu fonksiyon, bir filozofun doğumundan itibaren geçen süreyi hesaplar.
+long	elapsed_time(t_main *main)
 {
-	long elapsed;
+	long	elapsed;
 
 	elapsed = convert_time() - main->start;
 	return (elapsed);
 }
 
-long convert_time(void) //bu fonksiyon, geçerli zamanı milisaniye cinsinden döndürür.
+long	convert_time(void)
 {
-    struct timeval time;
-    long total_ms;
+	struct timeval	time;
+	long			total_ms;
 
-    total_ms = 0;
-    gettimeofday(&time, NULL); //NULL yazılmazsa tz yani timezone yazılması gerekir.
-    total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-    return (total_ms);
+	total_ms = 0;
+	gettimeofday(&time, NULL);
+	total_ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (total_ms);
 }
 
 int	ft_atoi(const char *str)
@@ -52,48 +52,48 @@ int	ft_atoi(const char *str)
 	{
 		sum = (sum * 10) + (str[i] - '0');
 		if ((sign == 1 && sum > 2147483647) || (sign == -1 && sum > 2147483648))
-            return 0;
-        i++;
+			return (0);
+		i++;
 	}
 	return (sign * sum);
 }
 
-int rudead_checker(t_main *main, int flag)
+int	rudead_checker(t_main *main, int flag)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    pthread_mutex_lock(&main->dead_mutex);
-    if(main->rudead == 1 && flag == 0)
-    {
-        pthread_mutex_unlock(&main->dead_mutex);
-        return 1;
-    }
-    else if(main->rudead == 1 && flag == 1)
-    {
-        pthread_mutex_unlock(&main->dead_mutex);
-        while(i < main->philo_num)
-        {
-            pthread_mutex_unlock(main->philos[i].right_fork);
-            pthread_mutex_unlock(main->philos[i].left_fork);
-            i++;
-        }
-        return 1;
-    }
-    pthread_mutex_unlock(&main->dead_mutex);
-    return 0;
+	i = 0;
+	pthread_mutex_lock(&main->dead_mutex);
+	if (main->rudead == 1 && flag == 0)
+	{
+		pthread_mutex_unlock(&main->dead_mutex);
+		return (1);
+	}
+	else if (main->rudead == 1 && flag == 1)
+	{
+		pthread_mutex_unlock(&main->dead_mutex);
+		while (i < main->philo_num)
+		{
+			pthread_mutex_unlock(main->philos[i].right_fork);
+			pthread_mutex_unlock(main->philos[i].left_fork);
+			i++;
+		}
+		return (1);
+	}
+	pthread_mutex_unlock(&main->dead_mutex);
+	return (0);
 }
 
-void printing(t_main *main, int philo_id, char *str)
+void	printing(t_main *main, int philo_id, char *str)
 {
-    if (rudead_checker(main, 0))
-        return;
-    pthread_mutex_lock(&main->write_mutex);
-    if (rudead_checker(main, 0))
-    {
-        pthread_mutex_unlock(&main->write_mutex);
-        return;
-    }
-    printf("%ld\t%d %s\n", elapsed_time(main), philo_id, str);
-    pthread_mutex_unlock(&main->write_mutex);
+	if (rudead_checker(main, 0))
+		return ;
+	pthread_mutex_lock(&main->write_mutex);
+	if (rudead_checker(main, 0))
+	{
+		pthread_mutex_unlock(&main->write_mutex);
+		return ;
+	}
+	printf("%ld\t%d %s\n", elapsed_time(main), philo_id, str);
+	pthread_mutex_unlock(&main->write_mutex);
 }
