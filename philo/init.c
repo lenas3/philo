@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 16:20:27 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 17:14:22 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void	thread_create(t_main *main)
 	while (i < main->philo_num)
 	{
 		main->philos[i].last_meal = main->start;
-		pthread_create(&main->philos[i].thread, NULL, routine, (void *)&main->philos[i]);
+		pthread_create(&main->philos[i].thread, NULL,
+			routine, (void *)&main->philos[i]);
 		i++;
 	}
 }

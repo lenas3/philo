@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 17:03:33 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 17:08:09 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void	*routine(void *arg)
 
 int	eating(t_main *main, t_philo *ptr)
 {
-	if (rudead_checker(main, 0))
-		return (0);
 	if (ptr->philo_id % 2 == 0)
 	{
 		pthread_mutex_lock(ptr->right_fork);
