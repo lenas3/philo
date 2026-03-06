@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/02/21 16:31:59 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 12:35:33 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,26 @@ int	ft_atoi(const char *str)
 	return (sign * sum);
 }
 
-int rudead_checker(t_main *main)
+int rudead_checker(t_main *main, int flag)
 {
-	pthread_mutex_lock(&main->dead_mutex);
-    if(main->rudead == 1)
+    int i;
+
+    i = 0;
+    pthread_mutex_lock(&main->dead_mutex);
+    if(main->rudead == 1 && flag == 0)
     {
-		pthread_mutex_unlock(&main->dead_mutex);
+        pthread_mutex_unlock(&main->dead_mutex);
+        return 1;
+    }
+    else if(main->rudead == 1 && flag == 1)
+    {
+        pthread_mutex_unlock(&main->dead_mutex);
+        while(i < main->philo_num)
+        {
+            pthread_mutex_unlock(main->philos[i].right_fork);
+            pthread_mutex_unlock(main->philos[i].left_fork);
+            i++;
+        }
         return 1;
     }
     pthread_mutex_unlock(&main->dead_mutex);
@@ -72,10 +86,10 @@ int rudead_checker(t_main *main)
 
 void printing(t_main *main, int philo_id, char *str)
 {
-    if (rudead_checker(main))
+    if (rudead_checker(main, 0))
         return;
     pthread_mutex_lock(&main->write_mutex);
-    if (rudead_checker(main))
+    if (rudead_checker(main, 0))
     {
         pthread_mutex_unlock(&main->write_mutex);
         return;

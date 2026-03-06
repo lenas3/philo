@@ -6,11 +6,28 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/21 16:33:27 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 14:32:14 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void cleaning(t_main *main)
+{
+    int i;
+
+    i = 0;
+    while(i < main->philo_num)
+    {
+        pthread_mutex_destroy(&main->forks[i]);
+        i++;
+    }
+    pthread_mutex_destroy(&main->write_mutex);
+    pthread_mutex_destroy(&main->dead_mutex);
+    pthread_mutex_destroy(&main->meal_mutex);   
+    free(main->philos);
+    free(main->forks); 
+}
 
 int is_digit(char *str)
 {
@@ -67,10 +84,9 @@ int main(int argc, char **argv)
     init_forks(&main);
     init_philos(&main);
     main.rudead = 0;
-    main.ac = argc;
     thread_create(&main);
     monitoring(&main);
     thread_join(&main);
-    //call destroy func.
+    cleaning(&main);
     return(0);
 }

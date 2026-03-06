@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/03/04 20:58:48 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 15:54:41 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int init_philos(t_main *main)
         main->philos[i].right_fork = &main->forks[(i + 1) % main->philo_num];
         main->philos[i].data = main; //bu sayede tüm philolar main struct'ına erişebilecek
         main->philos[i].eat_num = 0;
-        //main->philos[i].last_meal = main->start; 
         i++;
     }
     return 0;

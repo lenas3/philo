@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 21:11:36 by asay              #+#    #+#             */
-/*   Updated: 2026/02/21 17:33:21 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 12:40:44 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int death_ctrl(t_main *main)
         pthread_mutex_lock(&main->meal_mutex);
         past_time = convert_time() - main->philos[i].last_meal;
         pthread_mutex_unlock(&main->meal_mutex);
-        if(past_time >= main->die_time)
+        if(past_time > main->die_time)
         {
             pthread_mutex_lock(&main->dead_mutex);
             if(main->rudead == 1)

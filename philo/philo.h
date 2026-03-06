@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/02/21 16:09:32 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 14:32:17 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ typedef struct s_main
     pthread_mutex_t meal_mutex;
     long            start;
     int             rudead; 
-    pthread_t       monitor;
-    int             ac;
     int             full_philos;
       
 }t_main;
@@ -73,7 +71,8 @@ int     is_digit(char *str);
 int     arg_check(int argc, char **argv, t_main *main);
 int     sleeping(t_main *main, t_philo *ptr);
 void    sleep_carefully(t_main *main, long start);
-int     rudead_checker(t_main *main);
+int     rudead_checker(t_main *main, int flag);
 void    printing(t_main *main, int philo_id, char *str);
+void    cleaning(t_main *main);
 
 #endif

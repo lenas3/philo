@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/02/21 17:08:48 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/06 14:41:41 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,11 @@ void *routine(void *arg)
         one_philo(main, ptr);
         return NULL;
     }
+    if(ptr->philo_id % 2 == 0)
+        usleep(800);
     while(1)
     {
-        if(rudead_checker(main))
+        if(rudead_checker(main, 0))
             return NULL;
         if(eating(main, ptr) == 0)
             return NULL;
@@ -54,16 +56,12 @@ void *routine(void *arg)
 
 int eating(t_main *main, t_philo *ptr)
 {
-    if(rudead_checker(main))
+    if(rudead_checker(main, 0))
         return 0;
     if(ptr->philo_id % 2 == 0)
     {
         pthread_mutex_lock(ptr->right_fork);
         printing(main, ptr->philo_id, "has taken a fork.");
-        if (rudead_checker(main)) {
-            pthread_mutex_unlock(ptr->right_fork);
-            return 0;
-        }
         pthread_mutex_lock(ptr->left_fork);
         printing(main, ptr->philo_id, "has taken a fork.");
     }
@@ -71,10 +69,6 @@ int eating(t_main *main, t_philo *ptr)
     {
         pthread_mutex_lock(ptr->left_fork);
         printing(main, ptr->philo_id, "has taken a fork.");
-        if (rudead_checker(main)) {
-            pthread_mutex_unlock(ptr->left_fork);
-            return 0;
-        }
         pthread_mutex_lock(ptr->right_fork);
         printing(main, ptr->philo_id, "has taken a fork.");
     }
@@ -93,17 +87,17 @@ int eating(t_main *main, t_philo *ptr)
 
 int thinking(t_main *main, t_philo *ptr)
 {
-    if(rudead_checker(main))
+    if(rudead_checker(main, 0))
         return 0;
     printing(main, ptr->philo_id, "is thinking.");
-    if(rudead_checker(main))
-        return 0;
+    if (main->philo_num % 2 != 0)
+        sleep_carefully(main, (main->eat_time - 20));
     return 1;
 }
 
 int sleeping(t_main *main, t_philo *ptr)
 {
-    if(rudead_checker(main))
+    if(rudead_checker(main, 0))
         return 0;
     printing(main, ptr->philo_id, "is sleeping.");
     sleep_carefully(main, main->sleep_time);
@@ -114,7 +108,7 @@ void sleep_carefully(t_main *main, long time_to_sleep)
     long start_time;
 
     start_time = convert_time();
-    while (!rudead_checker(main))
+    while (!rudead_checker(main, 0))
     {
         if (convert_time() - start_time >= time_to_sleep)
             break;
