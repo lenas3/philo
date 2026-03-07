@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:49:09 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 16:38:34 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/07 15:39:32 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	rudead_checker(t_main *main, int flag)
 	return (0);
 }
 
-void	printing(t_main *main, int philo_id, char *str)
+void	printing(t_main *main, int p_id, char *str)
 {
 	if (rudead_checker(main, 0))
 		return ;
@@ -94,6 +94,6 @@ void	printing(t_main *main, int philo_id, char *str)
 		pthread_mutex_unlock(&main->write_mutex);
 		return ;
 	}
-	printf("%ld\t%d %s\n", elapsed_time(main), philo_id, str);
+	printf("%ld\t%d %s\n", elapsed_time(main), p_id, str);
 	pthread_mutex_unlock(&main->write_mutex);
 }

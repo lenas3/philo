@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 16:53:14 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/07 15:39:32 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 typedef struct s_philo
 {
-	int				philo_id;
+	int				p_id;
 	int				eat_num;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
@@ -56,7 +56,7 @@ void	thread_join(t_main *main);
 int		ft_atoi(const char *str);
 void	*routine(void *arg);
 long	convert_time(void);
-int		death_ctrl(t_main *main);
+int		death_ctrl(t_main *main, int i);
 int		eating(t_main *main, t_philo *ptr);
 void	monitoring(t_main *main);
 long	elapsed_time(t_main *main);
@@ -68,7 +68,7 @@ int		arg_check(int argc, char **argv, t_main *main);
 int		sleeping(t_main *main, t_philo *ptr);
 void	sleep_carefully(t_main *main, long start);
 int		rudead_checker(t_main *main, int flag);
-void	printing(t_main *main, int philo_id, char *str);
+void	printing(t_main *main, int p_id, char *str);
 void	cleaning(t_main *main);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 17:14:22 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/07 15:39:23 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	init_philos(t_main *main)
 		return (1);
 	while (i < main->philo_num)
 	{
-		main->philos[i].philo_id = i + 1;
+		main->philos[i].p_id = i + 1;
 		main->philos[i].left_fork = &main->forks[i];
 		main->philos[i].right_fork = &main->forks[(i + 1) % main->philo_num];
 		main->philos[i].data = main;
