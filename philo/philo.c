@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/03/07 15:39:32 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/23 18:41:25 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ void	*routine(void *arg)
 			return (NULL);
 		if (eating(main, ptr) == 0)
 			return (NULL);
-		if (thinking(main, ptr) == 0)
-			return (NULL);
 		if (sleeping(main, ptr) == 0)
+			return (NULL);
+		if (thinking(main, ptr) == 0)
 			return (NULL);
 	}
 	return (NULL);

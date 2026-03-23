@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 21:11:36 by asay              #+#    #+#             */
-/*   Updated: 2026/03/07 15:38:59 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/23 18:14:02 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,16 @@ int	eat_count_ctrl(t_main *main)
 
 	i = 0;
 	full_philos = 0;
-	pthread_mutex_lock(&main->meal_mutex);
-	if (main->must_eat <= 0)
-	{
-		pthread_mutex_unlock(&main->meal_mutex);
+	if(main->must_eat <= 0)
 		return (0);
-	}
-	pthread_mutex_unlock(&main->meal_mutex);
+	pthread_mutex_lock(&main->meal_mutex);
 	while (i < main->philo_num)
 	{
-		pthread_mutex_lock(&main->meal_mutex);
 		if (main->philos[i].eat_num >= main->must_eat)
 			full_philos++;
-		pthread_mutex_unlock(&main->meal_mutex);
 		i++;
 	}
+	pthread_mutex_unlock(&main->meal_mutex);
 	if (full_philos == main->philo_num)
 		return (1);
 	return (0);
