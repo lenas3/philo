@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 20:04:21 by asay              #+#    #+#             */
-/*   Updated: 2026/03/07 15:39:23 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/23 21:09:59 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	init_args(t_main *main, char **argv)
 	main->full_philos = 0;
 	main->must_eat = -1;
 	if (main->philo_num <= 0 || main->die_time <= 0
-		|| main->eat_time <= 0 || main->sleep_time <= 0)
+		|| main->eat_time < 0 || main->sleep_time < 0)
 		return (1);
 	if (argv[5])
 	{

@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/03/07 15:39:32 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/23 20:51:54 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,6 @@ void	sleep_carefully(t_main *main, long start);
 int		rudead_checker(t_main *main, int flag);
 void	printing(t_main *main, int p_id, char *str);
 void	cleaning(t_main *main);
+int		value_ctrl(t_main *main, int argc);
 
 #endif

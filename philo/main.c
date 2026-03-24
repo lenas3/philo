@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:23:41 by asay              #+#    #+#             */
-/*   Updated: 2026/03/06 16:24:42 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/24 18:48:42 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	is_digit(char *str)
 {
 	int	i;
 
-	i = (0);
+	i = 0;
 	if (!str[i])
 		return (0);
 	if (str[i] == '+')
@@ -43,6 +43,22 @@ int	is_digit(char *str)
 		if (str[i] < '0' || str[i] > '9')
 			return (0);
 		i++;
+	}
+	return (1);
+}
+
+int	value_ctrl(t_main *main, int argc)
+{
+	if (main->philo_num < 1 || main->philo_num > 500)
+		return (printf("Error: Invalid philosopher count\n"), 0);
+	if (main->die_time < 0 || main->eat_time < 0
+		|| main->sleep_time < 0)
+		return (printf("Error: Negative time values\n"), 0);
+	if (argc == 6 && main->must_eat <= 0)
+	{
+		if (main->must_eat == 0)
+			return (0);
+		return (printf("Error: Negative meal count\n"), 0);
 	}
 	return (1);
 }
@@ -67,11 +83,8 @@ int	arg_check(int argc, char **argv, t_main *main)
 		i++;
 	}
 	if (init_args(main, argv) == 1)
-	{
-		printf("Error, Invalid argument!\n");
 		return (0);
-	}
-	return (1);
+	return (value_ctrl(main, argc));
 }
 
 int	main(int argc, char **argv)
@@ -81,8 +94,13 @@ int	main(int argc, char **argv)
 	if (arg_check(argc, argv, &main) == 0)
 		return (0);
 	main.start = convert_time();
-	init_forks(&main);
-	init_philos(&main);
+	if (init_forks(&main) == 1)
+		return (printf("Error: Malloc failed for forks\n"), 1);
+	if (init_philos(&main) == 1)
+	{
+		free(main.forks);
+		return (printf("Error: Malloc failed for philos\n"), 1);
+	}
 	main.rudead = 0;
 	thread_create(&main);
 	monitoring(&main);
