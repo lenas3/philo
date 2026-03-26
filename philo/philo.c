@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/03/23 18:41:25 by asay             ###   ########.fr       */
+/*   Updated: 2026/03/27 01:46:45 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*routine(void *arg)
 		return (NULL);
 	}
 	if (ptr->p_id % 2 == 0)
-		usleep(800);
+		usleep(1000);
 	while (1)
 	{
 		if (rudead_checker(main, 0))
@@ -54,7 +54,7 @@ void	*routine(void *arg)
 
 int	eating(t_main *main, t_philo *ptr)
 {
-	if (ptr->p_id % 2 == 0)
+	if (ptr->p_id % 2 == 0 || ptr->p_id == main->philo_num)
 	{
 		pthread_mutex_lock(ptr->right_fork);
 		printing(main, ptr->p_id, "has taken a fork.");
@@ -68,12 +68,10 @@ int	eating(t_main *main, t_philo *ptr)
 		pthread_mutex_lock(ptr->right_fork);
 		printing(main, ptr->p_id, "has taken a fork.");
 	}
-	pthread_mutex_lock(&main->meal_mutex);
-	ptr->last_meal = convert_time();
-	pthread_mutex_unlock(&main->meal_mutex);
 	printing(main, ptr->p_id, "is eating.");
 	sleep_carefully(main, main->eat_time);
 	pthread_mutex_lock(&main->meal_mutex);
+	ptr->last_meal = convert_time();
 	ptr->eat_num++;
 	pthread_mutex_unlock(&main->meal_mutex);
 	pthread_mutex_unlock(ptr->right_fork);
@@ -81,13 +79,21 @@ int	eating(t_main *main, t_philo *ptr)
 	return (1);
 }
 
-int	thinking(t_main *main, t_philo *ptr)
+int thinking(t_main *main, t_philo *ptr)
 {
+	long time_to_think;
+
 	if (rudead_checker(main, 0))
 		return (0);
 	printing(main, ptr->p_id, "is thinking.");
+	
 	if (main->philo_num % 2 != 0)
-		sleep_carefully(main, (main->eat_time - 20));
+	{
+		time_to_think = (main->eat_time * 2) - main->sleep_time;
+		if (time_to_think < 0)
+			time_to_think = 0;
+		sleep_carefully(main, time_to_think * 0.5); 
+	}
 	return (1);
 }
 
