@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 17:33:41 by asay              #+#    #+#             */
-/*   Updated: 2026/03/27 01:46:45 by marvin           ###   ########.fr       */
+/*   Updated: 2026/03/27 15:10:25 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	*routine(void *arg)
 		usleep(1000);
 	while (1)
 	{
-		if (rudead_checker(main, 0))
+		if (rudead_checker(main))
 			return (NULL);
 		if (eating(main, ptr) == 0)
 			return (NULL);
@@ -79,27 +79,26 @@ int	eating(t_main *main, t_philo *ptr)
 	return (1);
 }
 
-int thinking(t_main *main, t_philo *ptr)
+int	thinking(t_main *main, t_philo *ptr)
 {
-	long time_to_think;
+	long	time_to_think;
 
-	if (rudead_checker(main, 0))
+	if (rudead_checker(main))
 		return (0);
 	printing(main, ptr->p_id, "is thinking.");
-	
 	if (main->philo_num % 2 != 0)
 	{
 		time_to_think = (main->eat_time * 2) - main->sleep_time;
 		if (time_to_think < 0)
 			time_to_think = 0;
-		sleep_carefully(main, time_to_think * 0.5); 
+		sleep_carefully(main, time_to_think * 0.5);
 	}
 	return (1);
 }
 
 int	sleeping(t_main *main, t_philo *ptr)
 {
-	if (rudead_checker(main, 0))
+	if (rudead_checker(main))
 		return (0);
 	printing(main, ptr->p_id, "is sleeping.");
 	sleep_carefully(main, main->sleep_time);

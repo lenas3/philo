@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 17:25:22 by asay              #+#    #+#             */
-/*   Updated: 2026/03/26 01:32:53 by marvin           ###   ########.fr       */
+/*   Updated: 2026/03/27 15:10:40 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		is_digit(char *str);
 int		arg_check(int argc, char **argv, t_main *main);
 int		sleeping(t_main *main, t_philo *ptr);
 void	sleep_carefully(t_main *main, long start);
-int		rudead_checker(t_main *main, int flag);
+int		rudead_checker(t_main *main);
 void	printing(t_main *main, int p_id, char *str);
 void	cleaning(t_main *main);
 int		value_ctrl(t_main *main, int argc);

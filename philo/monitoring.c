@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitoring.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 21:11:36 by asay              #+#    #+#             */
-/*   Updated: 2026/03/27 01:11:38 by marvin           ###   ########.fr       */
+/*   Updated: 2026/03/27 15:10:11 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	sleep_carefully(t_main *main, long time_to_sleep)
 	long	start_time;
 
 	start_time = convert_time();
-	while (!rudead_checker(main, 0))
+	while (!rudead_checker(main))
 	{
 		if (convert_time() - start_time >= time_to_sleep)
 			break ;
